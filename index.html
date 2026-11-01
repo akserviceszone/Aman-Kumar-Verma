@@ -164,6 +164,15 @@ const { data: sessionData } = await supabase.auth.getSession();
 if (sessionData.session) {
  await loadDashboard(sessionData.session.user);
 }
+ window.showRegister = () => {
+    document.getElementById('loginBox').classList.add('hidden');
+    document.getElementById('registerBox').classList.remove('hidden');
+};
+
+window.showLogin = () => {
+    document.getElementById('registerBox').classList.add('hidden');
+    document.getElementById('loginBox').classList.remove('hidden');
+};
 </script>
 
 </body>
