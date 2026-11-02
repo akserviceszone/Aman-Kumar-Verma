@@ -140,9 +140,15 @@ footer{text-align:center;padding:25px;color:#64748b}
   <div id="adminPanel" class="hidden">
     <hr>
     <h2>Admin Panel</h2>
-    <h3>Users Management</h3>
-    <button onclick="loadUsers()">Refresh Users</button>
-    <div id="usersList">Users list loading...</div>
+    <h3>Retailer Management</h3>
+<button onclick="loadUsers('retailer')">Refresh Retailers</button>
+<div id="retailerUsersList">Retailer list loading...</div>
+
+<hr>
+
+<h3>Distributor Management</h3>
+<button onclick="loadUsers('distributor')">Refresh Distributors</button>
+<div id="distributorUsersList">Distributor list loading...</div>
   </div>
 
   <button onclick="logout()">LOGOUT</button>
@@ -320,44 +326,74 @@ window.updateUserStatus = async (userId, newStatus) => {
   window.loadUsers();
 };
 
-window.loadUsers = async () => {
-  const usersList = document.getElementById('usersList');
-  usersList.textContent = 'Users loading...';
 
-  const { data: users, error } = await supabase
+window.loadUsers = async (type = 'all') => {
+  const retailerList = document.getElementById('retailerUsersList');
+  const distributorList = document.getElementById('distributorUsersList');
+
+  if (type === 'retailer' || type === 'all') {
+    retailerList.textContent = 'Retailers loading...';
+  }
+
+  if (type === 'distributor' || type === 'all') {
+    distributorList.textContent = 'Distributors loading...';
+  }
+
+  let query = supabase
     .from('profiles')
     .select('id, full_name, phone, account_type, status, package_amount, created_at')
     .order('created_at', { ascending: false });
 
+  if (type !== 'all') {
+    query = query.eq('account_type', type);
+  } else {
+    query = query.in('account_type', ['retailer', 'distributor']);
+  }
+
+  const { data: users, error } = await query;
+
   if (error) {
-    usersList.textContent = 'Error: ' + error.message;
+    if (type === 'retailer' || type === 'all') {
+      retailerList.textContent = 'Error: ' + error.message;
+    }
+    if (type === 'distributor' || type === 'all') {
+      distributorList.textContent = 'Error: ' + error.message;
+    }
     return;
   }
 
-  usersList.replaceChildren();
+  retailerList.replaceChildren();
+  distributorList.replaceChildren();
 
-  if (!users || users.length === 0) {
-    usersList.textContent = 'No users found.';
-    return;
-  }
+  const retailerUsers = (users || []).filter(
+    user => user.account_type === 'retailer'
+  );
 
-users.forEach(user => {
-    const card = document.createElement('div');
-    card.style.border = '1px solid #ccc';
-    card.style.padding = '10px';
-    card.style.margin = '10px 0';
+  const distributorUsers = (users || []).filter(
+    user => user.account_type === 'distributor'
+  );
 
-    const details = document.createElement('p');
-    details.textContent =
-      'Name: ' + (user.full_name || 'N/A') +
-      ' | Mobile: ' + (user.phone || 'N/A') +
-      ' | Type: ' + user.account_type +
-      ' | Status: ' + user.status +
-      ' | Package: ₹' + user.package_amount;
+  const showUsers = (list, userArray) => {
+    if (userArray.length === 0) {
+      list.textContent = 'No users found.';
+      return;
+    }
 
-    card.appendChild(details);
+    userArray.forEach(user => {
+      const card = document.createElement('div');
+      card.style.border = '1px solid #ccc';
+      card.style.padding = '10px';
+      card.style.margin = '10px 0';
 
-    if (user.account_type !== 'admin') {
+      const details = document.createElement('p');
+      details.textContent =
+        'Name: ' + (user.full_name || 'N/A') +
+        ' | Mobile: ' + (user.phone || 'N/A') +
+        ' | Status: ' + user.status +
+        ' | Package: ₹' + user.package_amount;
+
+      card.appendChild(details);
+
       const actionButton = document.createElement('button');
 
       if (user.status === 'active') {
@@ -373,11 +409,14 @@ users.forEach(user => {
       }
 
       card.appendChild(actionButton);
-    }
+      list.appendChild(card);
+    });
+  };
 
-    usersList.appendChild(card);
-});
+  showUsers(retailerList, retailerUsers);
+  showUsers(distributorList, distributorUsers);
 };
+
 window.logout = async () => {
   await supabase.auth.signOut();
   document.getElementById('dashboard').classList.add('hidden');
