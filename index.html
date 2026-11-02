@@ -189,11 +189,23 @@ document.getElementById('registerForm').addEventListener('submit', async (e) => 
  const email = document.getElementById('regEmail').value.trim();
  const password = document.getElementById('regPassword').value;
 
- const { data, error } = await supabase.auth.signUp({
+const account_type = document.getElementById('regAccountType').value;
+
+if (!['retailer', 'distributor'].includes(account_type)) {
+  return showMessage('Please select Retailer or Distributor.');
+}
+
+const { data, error } = await supabase.auth.signUp({
   email,
   password,
-  options: { data: { full_name, phone } }
- });
+  options: {
+    data: {
+      full_name,
+      phone,
+      account_type
+    }
+  }
+});
 
  if (error) return showMessage(error.message);
 
