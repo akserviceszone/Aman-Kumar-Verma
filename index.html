@@ -168,7 +168,35 @@ if (profile.account_type === 'admin') {
 } else {
   document.getElementById('adminPanel').classList.add('hidden');
 }
-}window.loadUsers = async () => {
+window.updateUserStatus = async (userId, newStatus) => {
+  const confirmChange = confirm(
+    'Are you sure you want to change this account status to ' + newStatus + '?'
+  );
+
+  if (!confirmChange) return;
+
+  const { data, error } = await supabase
+    .from('profiles')
+    .update({ status: newStatus })
+    .eq('id', userId)
+    .select('id, status')
+    .maybeSingle();
+
+  if (error) {
+    alert('Error: ' + error.message);
+    return;
+  }
+
+  if (!data) {
+    alert('Status was not changed. Please check Admin permissions.');
+    return;
+  }
+
+  alert('Account status changed to ' + data.status);
+  window.loadUsers();
+};
+
+window.loadUsers = async () => {
   const usersList = document.getElementById('usersList');
   usersList.textContent = 'Users loading...';
 
@@ -189,7 +217,7 @@ if (profile.account_type === 'admin') {
     return;
   }
 
-  users.forEach(user => {
+users.forEach(user => {
     const card = document.createElement('div');
     card.style.border = '1px solid #ccc';
     card.style.padding = '10px';
@@ -204,15 +232,34 @@ if (profile.account_type === 'admin') {
       ' | Package: ₹' + user.package_amount;
 
     card.appendChild(details);
+
+    if (user.account_type !== 'admin') {
+      const actionButton = document.createElement('button');
+
+      if (user.status === 'active') {
+        actionButton.textContent = 'Suspend';
+        actionButton.addEventListener('click', () => {
+          window.updateUserStatus(user.id, 'suspended');
+        });
+      } else {
+        actionButton.textContent = 'Activate';
+        actionButton.addEventListener('click', () => {
+          window.updateUserStatus(user.id, 'active');
+        });
+      }
+
+      card.appendChild(actionButton);
+    }
+
     usersList.appendChild(card);
-  });
+});
 };
 window.logout = async () => {
- await supabase.auth.signOut();
- document.getElementById('dashboard').classList.add('hidden');
- document.getElementById('loginBox').classList.remove('hidden');
+  await supabase.auth.signOut();
+  document.getElementById('dashboard').classList.add('hidden');
+  document.getElementById('loginBox').classList.remove('hidden');
 };
-
+  
 const { data: sessionData } = await supabase.auth.getSession();
 if (sessionData.session) {
  await loadDashboard(sessionData.session.user);
