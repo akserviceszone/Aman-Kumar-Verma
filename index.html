@@ -283,8 +283,33 @@ footer {
     <p id="userInfo"></p>
     <p id="userRole"></p>
     <p id="approvalInfo"></p>
+      
+<div id="adminPanel" class="hidden">
+  <hr>
+  <h2>Admin Dashboard</h2>
+  <h3>All Users Management</h3>
+  <button onclick="loadUsers()">Refresh Users</button>
 
-    <div id="adminPanel" class="hidden">
+  <div style="overflow-x:auto;">
+    <table border="1" cellpadding="8" cellspacing="0" width="100%">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Mobile</th>
+          <th>Account Type</th>
+          <th>Status</th>
+          <th>Package</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="usersList">
+        <tr><td colspan="7">Users loading...</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
 
       <hr>
 
@@ -688,151 +713,85 @@ window.updateUserStatus = async (userId, newStatus) => {
 
 // LOAD RETAILERS AND DISTRIBUTORS
 
-window.loadUsers = async (type = 'all') => {
 
-  const retailerList =
-    document.getElementById('retailerUsersList');
+window.loadUsers = async () => {
+  const usersList = document.getElementById('usersList');
 
-  const distributorList =
-    document.getElementById('distributorUsersList');
+  usersList.replaceChildren();
 
+  const loadingRow = document.createElement('tr');
+  const loadingCell = document.createElement('td');
+  loadingCell.colSpan = 7;
+  loadingCell.textContent = 'Users loading...';
+  loadingRow.appendChild(loadingCell);
+  usersList.appendChild(loadingRow);
 
-  if (type === 'retailer' || type === 'all') {
-    retailerList.textContent = 'Retailers loading...';
-  }
-
-  if (type === 'distributor' || type === 'all') {
-    distributorList.textContent = 'Distributors loading...';
-  }
-
-
-  let query = supabase
+  const { data: users, error } = await supabase
     .from('profiles')
-    .select(
-      'id, full_name, phone, account_type, status, package_amount, created_at'
-    )
+    .select('id, full_name, phone, account_type, status, package_amount, created_at')
+    .in('account_type', ['retailer', 'distributor'])
     .order('created_at', { ascending: false });
 
-
-  if (type !== 'all') {
-
-    query = query.eq('account_type', type);
-
-  } else {
-
-    query = query.in(
-      'account_type',
-      ['retailer', 'distributor']
-    );
-
-  }
-
-
-  const { data: users, error } = await query;
-
+  usersList.replaceChildren();
 
   if (error) {
-
-    if (type === 'retailer' || type === 'all') {
-      retailerList.textContent = 'Error: ' + error.message;
-    }
-
-    if (type === 'distributor' || type === 'all') {
-      distributorList.textContent = 'Error: ' + error.message;
-    }
-
+    const row = document.createElement('tr');
+    const cell = document.createElement('td');
+    cell.colSpan = 7;
+    cell.textContent = 'Error: ' + error.message;
+    row.appendChild(cell);
+    usersList.appendChild(row);
     return;
-
   }
 
-
-  if (type === 'retailer' || type === 'all') {
-    retailerList.replaceChildren();
+  if (!users || users.length === 0) {
+    const row = document.createElement('tr');
+    const cell = document.createElement('td');
+    cell.colSpan = 7;
+    cell.textContent = 'No users found.';
+    row.appendChild(cell);
+    usersList.appendChild(row);
+    return;
   }
 
-  if (type === 'distributor' || type === 'all') {
-    distributorList.replaceChildren();
-  }
+  users.forEach((user, index) => {
+    const row = document.createElement('tr');
 
+    const values = [
+      index + 1,
+      user.full_name || 'N/A',
+      user.phone || 'N/A',
+      user.account_type.toUpperCase(),
+      user.status,
+      '₹' + (user.package_amount || 0)
+    ];
 
-  const retailerUsers = (users || []).filter(
-    user => user.account_type === 'retailer'
-  );
-
-  const distributorUsers = (users || []).filter(
-    user => user.account_type === 'distributor'
-  );
-
-
-  const showUsers = (list, userArray) => {
-
-    if (userArray.length === 0) {
-
-      list.textContent = 'No users found.';
-
-      return;
-
-    }
-
-
-    userArray.forEach(user => {
-
-      const card = document.createElement('div');
-
-      card.className = 'user-card';
-
-
-      const details = document.createElement('p');
-
-      details.textContent =
-        'Name: ' + (user.full_name || 'N/A') +
-        ' | Mobile: ' + (user.phone || 'N/A') +
-        ' | Status: ' + user.status +
-        ' | Package: ₹' + (user.package_amount || 0);
-
-
-      card.appendChild(details);
-
-
-      const actionButton = document.createElement('button');
-
-
-      if (user.status === 'active') {
-
-        actionButton.textContent = 'Suspend';
-
-        actionButton.addEventListener('click', () => {
-          window.updateUserStatus(user.id, 'suspended');
-        });
-
-      } else {
-
-        actionButton.textContent = 'Activate';
-
-        actionButton.addEventListener('click', () => {
-          window.updateUserStatus(user.id, 'active');
-        });
-
-      }
-
-
-      card.appendChild(actionButton);
-
-      list.appendChild(card);
-
+    values.forEach(value => {
+      const cell = document.createElement('td');
+      cell.textContent = value;
+      row.appendChild(cell);
     });
 
-  };
+    const actionCell = document.createElement('td');
+    const actionButton = document.createElement('button');
 
+    if (user.status === 'active') {
+      actionButton.textContent = 'Suspend';
+      actionButton.addEventListener('click', () => {
+        window.updateUserStatus(user.id, 'suspended');
+      });
+    } else {
+      actionButton.textContent = 'Activate';
+      actionButton.addEventListener('click', () => {
+        window.updateUserStatus(user.id, 'active');
+      });
+    }
 
-  if (type === 'retailer' || type === 'all') {
-    showUsers(retailerList, retailerUsers);
-  }
+    actionCell.appendChild(actionButton);
+    row.appendChild(actionCell);
 
-  if (type === 'distributor' || type === 'all') {
-    showUsers(distributorList, distributorUsers);
-  }
-
+    usersList.appendChild(row);
+  });
 };
 
 
