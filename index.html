@@ -4,306 +4,652 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>A.K SERVICES - Digital Service Portal</title>
+
 <style>
-*{box-sizing:border-box}
-body{margin:0;font-family:Arial,sans-serif;background:#f1f5f9;color:#172554}
-header{background:#102b55;color:white;padding:22px;text-align:center}
-header h1{margin:0;font-size:28px}
-header p{margin:8px 0 0}
-.container{max-width:430px;margin:35px auto;padding:15px}
-.card{background:white;padding:25px;border-radius:14px;box-shadow:0 5px 22px #0001}
-h2{text-align:center;color:#12366b}
-input,select{width:100%;padding:13px;margin:9px 0;border:1px solid #cbd5e1;border-radius:7px;font-size:15px}
-button{width:100%;padding:13px;background:#1455a0;color:white;border:0;border-radius:7px;font-size:16px;margin-top:10px;cursor:pointer}
-button:hover{background:#0c3971}
-.link{text-align:center;margin-top:18px;color:#1455a0;cursor:pointer}
-.hidden{display:none}
-footer{text-align:center;padding:25px;color:#64748b}
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #eef3f9;
+  color: #172554;
+}
+
+header {
+  background: #102b55;
+  color: white;
+  text-align: center;
+  padding: 20px;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 28px;
+}
+
+header p {
+  margin: 7px 0 0;
+}
+
+.container {
+  max-width: 430px;
+  margin: 35px auto;
+  padding: 15px;
+}
+
+.card {
+  background: white;
+  padding: 25px;
+  border-radius: 14px;
+  box-shadow: 0 5px 22px #0001;
+}
+
+h2 {
+  text-align: center;
+  color: #12366b;
+}
+
+p {
+  line-height: 1.5;
+}
+
+input, select {
+  width: 100%;
+  padding: 13px;
+  margin: 9px 0;
+  border: 1px solid #cbd5e1;
+  border-radius: 7px;
+  font-size: 15px;
+}
+
+button {
+  width: 100%;
+  padding: 14px;
+  background: #1455a0;
+  color: white;
+  border: 0;
+  border-radius: 7px;
+  font-size: 16px;
+  margin-top: 12px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+button:hover {
+  background: #0c3971;
+}
+
+.login-options button {
+  background: #102b55;
+  margin-top: 12px;
+}
+
+.login-options button:hover {
+  background: #2563a9;
+}
+
+.create-button {
+  background: #087b58;
+}
+
+.create-button:hover {
+  background: #065d43;
+}
+
+.link {
+  text-align: center;
+  margin-top: 18px;
+  color: #1455a0;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.back-button {
+  background: #64748b;
+}
+
+.user-card {
+  border: 1px solid #cbd5e1;
+  padding: 12px;
+  margin: 12px 0;
+  border-radius: 8px;
+}
+
+footer {
+  text-align: center;
+  padding: 25px;
+  color: #64748b;
+  font-size: 13px;
+}
 </style>
 </head>
+
 <body>
 
 <header>
-<h1>A.K SERVICES</h1>
-<p>Digital Service & Retailer Portal</p>
+  <h1>A.K SERVICES</h1>
+  <p>Digital Service & Retailer Portal</p>
 </header>
 
 <div class="container">
 
-<div class="card" id="loginBox">
-  <h2>Welcome to A.K SERVICES</h2>
-  <p style="text-align:center">Select Your Login Type</p>
+  <!-- MAIN HOME PAGE -->
+  <div class="card" id="homeBox">
 
-  <div class="login-options">
-    <button type="button" onclick="chooseLoginType('admin')">
-      ADMIN LOGIN
-    </button>
+    <h2>Welcome to A.K SERVICES</h2>
 
-    <button type="button" onclick="chooseLoginType('retailer')">
-      RETAILER LOGIN
-    </button>
+    <p style="text-align:center">
+      Select Your Login Type
+    </p>
 
-    <button type="button" onclick="chooseLoginType('distributor')">
-      DISTRIBUTOR LOGIN
-    </button>
+    <div class="login-options">
+
+      <button onclick="chooseLoginType('admin')">
+        ADMIN LOGIN
+      </button>
+
+      <button onclick="chooseLoginType('retailer')">
+        RETAILER LOGIN
+      </button>
+
+      <button onclick="chooseLoginType('distributor')">
+        DISTRIBUTOR LOGIN
+      </button>
+
+      <button class="create-button" onclick="showRegister()">
+        CREATE NEW ACCOUNT
+      </button>
+
+    </div>
   </div>
 
-  <p id="selectedLoginType" style="text-align:center">
-    Please select your account type
-  </p>
 
-  <form id="loginForm">
-    <input type="email" id="email"
-      placeholder="Email Address" required>
+  <!-- LOGIN PAGE -->
+  <div class="card hidden" id="loginBox">
 
-    <input type="password" id="password"
-      placeholder="Password" required>
+    <h2 id="loginHeading">Account Login</h2>
 
-    <button type="submit">LOGIN</button>
-  </form>
+    <p style="text-align:center">
+      Login to your account
+    </p>
 
-  <div class="link" onclick="showRegister()">
-    Create New Account
-  </div>
-</div>
-<h2>Welcome Back</h2>
-<p style="text-align:center">Login to your account</p>
+    <form id="loginForm">
 
-<form id="loginForm">
-<input type="email" id="email" placeholder="Email Address" required>
-<input type="password" id="password" placeholder="Password" required>
-<button type="submit">LOGIN</button>
-</form>
+      <input
+        type="email"
+        id="email"
+        placeholder="Email Address"
+        required
+      >
 
-<div class="link" onclick="showRegister()">Create New Account</div>
-</div>
+      <input
+        type="password"
+        id="password"
+        placeholder="Password"
+        required
+      >
 
-<div class="card hidden" id="registerBox">
-  <h2>Create Account</h2>
+      <button type="submit">
+        LOGIN
+      </button>
 
-  <form id="registerForm">
+    </form>
 
-    <label>Choose Account Type</label>
-    <select id="regAccountType" required>
-      <option value="">Select Account Type</option>
-      <option value="retailer">Retailer</option>
-      <option value="distributor">Distributor</option>
-    </select>
+    <div class="link" onclick="showRegister()">
+      Create New Account
+    </div>
 
-    <input id="fullName" placeholder="Full Name" required>
+    <button class="back-button" onclick="goHome()">
+      BACK
+    </button>
 
-    <input
-      id="phone"
-      type="tel"
-      placeholder="Mobile Number"
-      required
-    >
-
-    <input
-      type="email"
-      id="regEmail"
-      placeholder="Email Address"
-      required
-    >
-
-    <input
-      type="password"
-      id="regPassword"
-      placeholder="Password (Minimum 6 Characters)"
-      minlength="6"
-      required
-    >
-
-    <button type="submit">REGISTER</button>
-  </form>
-
-  <div class="link" onclick="showLogin()">Back to Login</div>
-</div>
-<h2>Create Account</h2>
-<form id="registerForm">
-<input id="fullName" placeholder="Full Name" required>
-<input id="phone" placeholder="Mobile Number" required>
-<input type="email" id="regEmail" placeholder="Email Address" required>
-<input type="password" id="regPassword" placeholder="Password (Minimum 6 Characters)" minlength="6" required>
-<button type="submit">REGISTER</button>
-</form>
-<div class="link" onclick="showLogin()">Back to Login</div>
-</div>
-
-<div class="card hidden" id="dashboard">
-  <h2>A.K SERVICES Dashboard</h2>
-
-  <p id="userInfo"></p>
-  <p id="userRole"></p>
-  <p id="approvalInfo"></p>
-
-  <div id="adminPanel" class="hidden">
-    <hr>
-    <h2>Admin Panel</h2>
-    <h3>Retailer Management</h3>
-<button onclick="loadUsers('retailer')">Refresh Retailers</button>
-<div id="retailerUsersList">Retailer list loading...</div>
-
-<hr>
-
-<h3>Distributor Management</h3>
-<button onclick="loadUsers('distributor')">Refresh Distributors</button>
-<div id="distributorUsersList">Distributor list loading...</div>
   </div>
 
-  <button onclick="logout()">LOGOUT</button>
-</div>
+
+  <!-- CREATE ACCOUNT PAGE -->
+  <div class="card hidden" id="registerBox">
+
+    <h2>Create New Account</h2>
+
+    <p style="text-align:center">
+      Register with A.K SERVICES
+    </p>
+
+    <form id="registerForm">
+
+      <label>Choose Account Type</label>
+
+      <select id="regAccountType" required>
+        <option value="">Select Account Type</option>
+        <option value="retailer">Retailer</option>
+        <option value="distributor">Distributor</option>
+      </select>
+
+      <input
+        type="text"
+        id="fullName"
+        placeholder="Full Name"
+        required
+      >
+
+      <input
+        type="tel"
+        id="phone"
+        placeholder="Mobile Number"
+        pattern="[0-9]{10}"
+        maxlength="10"
+        required
+      >
+
+      <input
+        type="email"
+        id="regEmail"
+        placeholder="Email Address"
+        required
+      >
+
+      <input
+        type="password"
+        id="regPassword"
+        placeholder="Password (Minimum 6 Characters)"
+        minlength="6"
+        required
+      >
+
+      <button type="submit">
+        REGISTER
+      </button>
+
+    </form>
+
+    <button class="back-button" onclick="goHome()">
+      BACK TO HOME
+    </button>
+
+  </div>
+
+
+  <!-- DASHBOARD -->
+  <div class="card hidden" id="dashboard">
+
+    <h2>A.K SERVICES Dashboard</h2>
+
+    <p id="userInfo"></p>
+    <p id="userRole"></p>
+    <p id="approvalInfo"></p>
+
+    <div id="adminPanel" class="hidden">
+
+      <hr>
+
+      <h2>Admin Panel</h2>
+
+      <h3>Retailer Management</h3>
+
+      <button onclick="loadUsers('retailer')">
+        Refresh Retailers
+      </button>
+
+      <div id="retailerUsersList">
+        Retailer list loading...
+      </div>
+
+      <hr>
+
+      <h3>Distributor Management</h3>
+
+      <button onclick="loadUsers('distributor')">
+        Refresh Distributors
+      </button>
+
+      <div id="distributorUsersList">
+        Distributor list loading...
+      </div>
+
+    </div>
+
+    <button onclick="logout()">
+      LOGOUT
+    </button>
+
+  </div>
+
 </div>
 
-<footer>© 2026 A.K SERVICES | Trust • Honesty • Quality</footer>
+<footer>
+  © 2026 A.K SERVICES | Trust • Honesty • Quality
+</footer>
+
 
 <script type="module">
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
 
-// ENTER YOUR SUPABASE PROJECT URL AND ANON/PUBLISHABLE KEY BELOW
-const SUPABASE_URL = 'https://wxacdymlbxrrvhxhhzrc.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_vbWtl2hOd7LIvNDHVSQSTA_CjdIiluV';
-const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
-  let selectedLoginType = '';
+import {
+  createClient
+} from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+
+
+// SUPABASE CONNECTION
+
+const SUPABASE_URL =
+'https://wxacdymlbxrrvhxhhzrc.supabase.co';
+
+const SUPABASE_KEY =
+'sb_publishable_vbWtl2hOd7LIvNDHVSQSTA_CjdIiluV';
+
+const supabase = createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+
+
+let selectedLoginType = '';
+
+
+// PAGE CONTROL
+
+function hideAllPages() {
+
+  document.getElementById('homeBox').classList.add('hidden');
+
+  document.getElementById('loginBox').classList.add('hidden');
+
+  document.getElementById('registerBox').classList.add('hidden');
+
+  document.getElementById('dashboard').classList.add('hidden');
+
+}
+
+
+window.goHome = () => {
+
+  hideAllPages();
+
+  selectedLoginType = '';
+
+  document.getElementById('loginForm').reset();
+
+  document.getElementById('homeBox').classList.remove('hidden');
+
+};
+
 
 window.chooseLoginType = (type) => {
+
   selectedLoginType = type;
 
-  document.getElementById('selectedLoginType').textContent =
-    'Selected Login: ' + type.toUpperCase();
+  hideAllPages();
+
+  document.getElementById('loginHeading').textContent =
+    type.toUpperCase() + ' LOGIN';
+
+  document.getElementById('loginBox').classList.remove('hidden');
+
 };
+
 
 window.showRegister = () => {
- document.getElementById('loginBox').classList.add('hidden');
- document.getElementById('registerBox').classList.remove('hidden');
+
+  hideAllPages();
+
+  document.getElementById('registerBox').classList.remove('hidden');
+
 };
+
 
 window.showLogin = () => {
- document.getElementById('registerBox').classList.add('hidden');
- document.getElementById('loginBox').classList.remove('hidden');
+
+  window.goHome();
+
 };
 
+
 function showMessage(message) {
- alert(message);
+
+  alert(message);
+
 }
 
-document.getElementById('registerForm').addEventListener('submit', async (e) => {
- e.preventDefault();
 
- const full_name = document.getElementById('fullName').value.trim();
- const phone = document.getElementById('phone').value.trim();
- const email = document.getElementById('regEmail').value.trim();
- const password = document.getElementById('regPassword').value;
+// REGISTRATION
 
-const account_type = document.getElementById('regAccountType').value;
+document.getElementById('registerForm')
+.addEventListener('submit', async (e) => {
 
-if (!['retailer', 'distributor'].includes(account_type)) {
-  return showMessage('Please select Retailer or Distributor.');
-}
+  e.preventDefault();
 
-const { data, error } = await supabase.auth.signUp({
-  email,
-  password,
-  options: {
-    data: {
-      full_name,
-      phone,
-      account_type
-    }
+  const full_name =
+    document.getElementById('fullName').value.trim();
+
+  const phone =
+    document.getElementById('phone').value.trim();
+
+  const email =
+    document.getElementById('regEmail').value.trim();
+
+  const password =
+    document.getElementById('regPassword').value;
+
+  const account_type =
+    document.getElementById('regAccountType').value;
+
+
+  if (!['retailer', 'distributor'].includes(account_type)) {
+
+    return showMessage(
+      'Please select Retailer or Distributor.'
+    );
+
   }
+
+
+  if (!/^[0-9]{10}$/.test(phone)) {
+
+    return showMessage(
+      'Please enter a valid 10 digit mobile number.'
+    );
+
+  }
+
+
+  const { error } = await supabase.auth.signUp({
+
+    email,
+    password,
+
+    options: {
+
+      data: {
+        full_name,
+        phone,
+        account_type
+      }
+
+    }
+
+  });
+
+
+  if (error) {
+
+    return showMessage(error.message);
+
+  }
+
+
+  showMessage(
+    'Registration submitted successfully. Verify your email if requested. Your account will remain pending until approved.'
+  );
+
+  e.target.reset();
+
+  window.goHome();
+
 });
 
- if (error) return showMessage(error.message);
 
- showMessage('Registration submitted. Verify your email if requested. Your account will remain pending until approved.');
- e.target.reset();
- window.showLogin();
-});
+// LOGIN
 
-document.getElementById('loginForm').addEventListener('submit', async (e) => {
-document.getElementById('loginForm').addEventListener('submit', async (e) => {
+document.getElementById('loginForm')
+.addEventListener('submit', async (e) => {
+
   e.preventDefault();
 
   if (!selectedLoginType) {
-    return showMessage('Please select Admin, Retailer or Distributor Login.');
+
+    return showMessage(
+      'Please select your Login Type.'
+    );
+
   }
 
-  const email = document.getElementById('email').value.trim();
-  const password = document.getElementById('password').value;
 
-  const { data, error } = await supabase.auth.signInWithPassword({
-    email,
-    password
-  });
+  const email =
+    document.getElementById('email').value.trim();
 
-  if (error) return showMessage(error.message);
+  const password =
+    document.getElementById('password').value;
 
-  const { data: profile, error: profileError } = await supabase
-    .from('profiles')
-    .select('account_type, status')
-    .eq('id', data.user.id)
-    .maybeSingle();
+
+  const { data, error } =
+    await supabase.auth.signInWithPassword({
+
+      email,
+      password
+
+    });
+
+
+  if (error) {
+
+    return showMessage(error.message);
+
+  }
+
+
+  const { data: profile, error: profileError } =
+    await supabase
+      .from('profiles')
+      .select('account_type, status')
+      .eq('id', data.user.id)
+      .maybeSingle();
+
 
   if (profileError || !profile) {
+
     await supabase.auth.signOut();
-    return showMessage('Account profile not found.');
+
+    return showMessage(
+      'Account profile not found. Please contact Admin.'
+    );
+
   }
 
+
   if (profile.account_type !== selectedLoginType) {
+
     await supabase.auth.signOut();
+
     return showMessage(
       'Wrong Login Type! Please select your correct account type.'
     );
+
   }
+
 
   if (profile.status !== 'active') {
+
     await supabase.auth.signOut();
-    return showMessage('Your account is suspended or inactive. Contact Admin.');
+
+    return showMessage(
+      'Your account is pending, suspended or inactive. Contact Admin.'
+    );
+
   }
 
+
   await loadDashboard(data.user);
+
 });
 
+
+// DASHBOARD
+
 async function loadDashboard(user) {
- const { data: profile, error } = await supabase
-  .from('profiles')
-  .select('full_name, account_type, status, package_amount')
-  .eq('id', user.id)
-  .maybeSingle();
 
- if (error) return showMessage(error.message);
+  const { data: profile, error } =
+    await supabase
+      .from('profiles')
+      .select(
+        'full_name, account_type, status, package_amount'
+      )
+      .eq('id', user.id)
+      .maybeSingle();
 
- if (!profile) {
-  showMessage('Profile not found. Please contact Admin.');
-  return;
- }
 
- document.getElementById('loginBox').classList.add('hidden');
- document.getElementById('registerBox').classList.add('hidden');
- document.getElementById('dashboard').classList.remove('hidden');
+  if (error || !profile) {
 
- document.getElementById('userInfo').textContent =
-  'Welcome, ' + (profile.full_name || user.email);
+    showMessage(
+      error ? error.message : 'Profile not found.'
+    );
 
- document.getElementById('userRole').textContent =
-  'Account Type: ' + profile.account_type;
+    return;
 
-document.getElementById('approvalInfo').textContent =
-  'Account Status: ' + profile.status;
+  }
 
-if (profile.account_type === 'admin') {
-  document.getElementById('adminPanel').classList.remove('hidden');
-  window.loadUsers();
-} else {
-  document.getElementById('adminPanel').classList.add('hidden');
+
+  hideAllPages();
+
+  document.getElementById('dashboard')
+    .classList.remove('hidden');
+
+
+  document.getElementById('userInfo').textContent =
+    'Welcome, ' + (profile.full_name || user.email);
+
+
+  document.getElementById('userRole').textContent =
+    'Account Type: ' + profile.account_type;
+
+
+  document.getElementById('approvalInfo').textContent =
+    'Account Status: ' + profile.status;
+
+
+  if (profile.account_type === 'admin') {
+
+    document.getElementById('adminPanel')
+      .classList.remove('hidden');
+
+    window.loadUsers();
+
+  } else {
+
+    document.getElementById('adminPanel')
+      .classList.add('hidden');
+
+  }
+
 }
-}
+
+
+// UPDATE USER STATUS
+
 window.updateUserStatus = async (userId, newStatus) => {
+
   const confirmChange = confirm(
-    'Are you sure you want to change this account status to ' + newStatus + '?'
+    'Are you sure you want to change this account status to ' +
+    newStatus + '?'
   );
 
+
   if (!confirmChange) return;
+
 
   const { data, error } = await supabase
     .from('profiles')
@@ -312,24 +658,44 @@ window.updateUserStatus = async (userId, newStatus) => {
     .select('id, status')
     .maybeSingle();
 
+
   if (error) {
+
     alert('Error: ' + error.message);
+
     return;
+
   }
+
 
   if (!data) {
-    alert('Status was not changed. Please check Admin permissions.');
+
+    alert(
+      'Status was not changed. Please check Admin permissions.'
+    );
+
     return;
+
   }
 
+
   alert('Account status changed to ' + data.status);
+
   window.loadUsers();
+
 };
 
 
+// LOAD RETAILERS AND DISTRIBUTORS
+
 window.loadUsers = async (type = 'all') => {
-  const retailerList = document.getElementById('retailerUsersList');
-  const distributorList = document.getElementById('distributorUsersList');
+
+  const retailerList =
+    document.getElementById('retailerUsersList');
+
+  const distributorList =
+    document.getElementById('distributorUsersList');
+
 
   if (type === 'retailer' || type === 'all') {
     retailerList.textContent = 'Retailers loading...';
@@ -339,31 +705,55 @@ window.loadUsers = async (type = 'all') => {
     distributorList.textContent = 'Distributors loading...';
   }
 
+
   let query = supabase
     .from('profiles')
-    .select('id, full_name, phone, account_type, status, package_amount, created_at')
+    .select(
+      'id, full_name, phone, account_type, status, package_amount, created_at'
+    )
     .order('created_at', { ascending: false });
 
+
   if (type !== 'all') {
+
     query = query.eq('account_type', type);
+
   } else {
-    query = query.in('account_type', ['retailer', 'distributor']);
+
+    query = query.in(
+      'account_type',
+      ['retailer', 'distributor']
+    );
+
   }
+
 
   const { data: users, error } = await query;
 
+
   if (error) {
+
     if (type === 'retailer' || type === 'all') {
       retailerList.textContent = 'Error: ' + error.message;
     }
+
     if (type === 'distributor' || type === 'all') {
       distributorList.textContent = 'Error: ' + error.message;
     }
+
     return;
+
   }
 
-  retailerList.replaceChildren();
-  distributorList.replaceChildren();
+
+  if (type === 'retailer' || type === 'all') {
+    retailerList.replaceChildren();
+  }
+
+  if (type === 'distributor' || type === 'all') {
+    distributorList.replaceChildren();
+  }
+
 
   const retailerUsers = (users || []).filter(
     user => user.account_type === 'retailer'
@@ -373,69 +763,102 @@ window.loadUsers = async (type = 'all') => {
     user => user.account_type === 'distributor'
   );
 
+
   const showUsers = (list, userArray) => {
+
     if (userArray.length === 0) {
+
       list.textContent = 'No users found.';
+
       return;
+
     }
 
+
     userArray.forEach(user => {
+
       const card = document.createElement('div');
-      card.style.border = '1px solid #ccc';
-      card.style.padding = '10px';
-      card.style.margin = '10px 0';
+
+      card.className = 'user-card';
+
 
       const details = document.createElement('p');
+
       details.textContent =
         'Name: ' + (user.full_name || 'N/A') +
         ' | Mobile: ' + (user.phone || 'N/A') +
         ' | Status: ' + user.status +
-        ' | Package: ₹' + user.package_amount;
+        ' | Package: ₹' + (user.package_amount || 0);
+
 
       card.appendChild(details);
 
+
       const actionButton = document.createElement('button');
 
+
       if (user.status === 'active') {
+
         actionButton.textContent = 'Suspend';
+
         actionButton.addEventListener('click', () => {
           window.updateUserStatus(user.id, 'suspended');
         });
+
       } else {
+
         actionButton.textContent = 'Activate';
+
         actionButton.addEventListener('click', () => {
           window.updateUserStatus(user.id, 'active');
         });
+
       }
 
+
       card.appendChild(actionButton);
+
       list.appendChild(card);
+
     });
+
   };
 
-  showUsers(retailerList, retailerUsers);
-  showUsers(distributorList, distributorUsers);
+
+  if (type === 'retailer' || type === 'all') {
+    showUsers(retailerList, retailerUsers);
+  }
+
+  if (type === 'distributor' || type === 'all') {
+    showUsers(distributorList, distributorUsers);
+  }
+
 };
+
+
+// LOGOUT
 
 window.logout = async () => {
+
   await supabase.auth.signOut();
-  document.getElementById('dashboard').classList.add('hidden');
-  document.getElementById('loginBox').classList.remove('hidden');
-};
-  
-const { data: sessionData } = await supabase.auth.getSession();
-if (sessionData.session) {
- await loadDashboard(sessionData.session.user);
-}
- window.showRegister = () => {
-    document.getElementById('loginBox').classList.add('hidden');
-    document.getElementById('registerBox').classList.remove('hidden');
+
+  window.goHome();
+
 };
 
-window.showLogin = () => {
-    document.getElementById('registerBox').classList.add('hidden');
-    document.getElementById('loginBox').classList.remove('hidden');
-};
+
+// CHECK EXISTING SESSION
+
+const { data: sessionData } =
+  await supabase.auth.getSession();
+
+
+if (sessionData.session) {
+
+  await loadDashboard(sessionData.session.user);
+
+}
+
 </script>
 
 </body>
