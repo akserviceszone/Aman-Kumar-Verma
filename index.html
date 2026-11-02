@@ -79,6 +79,46 @@ footer{text-align:center;padding:25px;color:#64748b}
 </div>
 
 <div class="card hidden" id="registerBox">
+  <h2>Create Account</h2>
+
+  <form id="registerForm">
+
+    <label>Choose Account Type</label>
+    <select id="regAccountType" required>
+      <option value="">Select Account Type</option>
+      <option value="retailer">Retailer</option>
+      <option value="distributor">Distributor</option>
+    </select>
+
+    <input id="fullName" placeholder="Full Name" required>
+
+    <input
+      id="phone"
+      type="tel"
+      placeholder="Mobile Number"
+      required
+    >
+
+    <input
+      type="email"
+      id="regEmail"
+      placeholder="Email Address"
+      required
+    >
+
+    <input
+      type="password"
+      id="regPassword"
+      placeholder="Password (Minimum 6 Characters)"
+      minlength="6"
+      required
+    >
+
+    <button type="submit">REGISTER</button>
+  </form>
+
+  <div class="link" onclick="showLogin()">Back to Login</div>
+</div>
 <h2>Create Account</h2>
 <form id="registerForm">
 <input id="fullName" placeholder="Full Name" required>
@@ -118,6 +158,14 @@ import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js
 const SUPABASE_URL = 'https://wxacdymlbxrrvhxhhzrc.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_vbWtl2hOd7LIvNDHVSQSTA_CjdIiluV';
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+  let selectedLoginType = '';
+
+window.chooseLoginType = (type) => {
+  selectedLoginType = type;
+
+  document.getElementById('selectedLoginType').textContent =
+    'Selected Login: ' + type.toUpperCase();
+};
 
 window.showRegister = () => {
  document.getElementById('loginBox').classList.add('hidden');
@@ -155,19 +203,47 @@ document.getElementById('registerForm').addEventListener('submit', async (e) => 
 });
 
 document.getElementById('loginForm').addEventListener('submit', async (e) => {
- e.preventDefault();
+document.getElementById('loginForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
 
- const email = document.getElementById('email').value.trim();
- const password = document.getElementById('password').value;
+  if (!selectedLoginType) {
+    return showMessage('Please select Admin, Retailer or Distributor Login.');
+  }
 
- const { data, error } = await supabase.auth.signInWithPassword({
-  email,
-  password
- });
+  const email = document.getElementById('email').value.trim();
+  const password = document.getElementById('password').value;
 
- if (error) return showMessage(error.message);
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email,
+    password
+  });
 
- await loadDashboard(data.user);
+  if (error) return showMessage(error.message);
+
+  const { data: profile, error: profileError } = await supabase
+    .from('profiles')
+    .select('account_type, status')
+    .eq('id', data.user.id)
+    .maybeSingle();
+
+  if (profileError || !profile) {
+    await supabase.auth.signOut();
+    return showMessage('Account profile not found.');
+  }
+
+  if (profile.account_type !== selectedLoginType) {
+    await supabase.auth.signOut();
+    return showMessage(
+      'Wrong Login Type! Please select your correct account type.'
+    );
+  }
+
+  if (profile.status !== 'active') {
+    await supabase.auth.signOut();
+    return showMessage('Your account is suspended or inactive. Contact Admin.');
+  }
+
+  await loadDashboard(data.user);
 });
 
 async function loadDashboard(user) {
