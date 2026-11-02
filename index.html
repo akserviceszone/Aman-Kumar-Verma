@@ -56,13 +56,22 @@ footer{text-align:center;padding:25px;color:#64748b}
 </div>
 
 <div class="card hidden" id="dashboard">
-<h2>A.K SERVICES Dashboard</h2>
-<p id="userInfo"></p>
-<p id="userRole"></p>
-<p id="approvalInfo"></p>
-<button onclick="logout()">LOGOUT</button>
-</div>
+  <h2>A.K SERVICES Dashboard</h2>
 
+  <p id="userInfo"></p>
+  <p id="userRole"></p>
+  <p id="approvalInfo"></p>
+
+  <div id="adminPanel" class="hidden">
+    <hr>
+    <h2>Admin Panel</h2>
+    <h3>Users Management</h3>
+    <button onclick="loadUsers()">Refresh Users</button>
+    <div id="usersList">Users list loading...</div>
+  </div>
+
+  <button onclick="logout()">LOGOUT</button>
+</div>
 </div>
 
 <footer>© 2026 A.K SERVICES | Trust • Honesty • Quality</footer>
@@ -129,7 +138,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
 async function loadDashboard(user) {
  const { data: profile, error } = await supabase
   .from('profiles')
-  .select('full_name, role, approval_status')
+  .select('full_name, account_type, status, package_amount')
   .eq('id', user.id)
   .maybeSingle();
 
@@ -148,12 +157,56 @@ async function loadDashboard(user) {
   'Welcome, ' + (profile.full_name || user.email);
 
  document.getElementById('userRole').textContent =
-  'Account Type: ' + profile.role;
+  'Account Type: ' + profile.account_type;
 
- document.getElementById('approvalInfo').textContent =
-  'Account Status: ' + profile.approval_status;
+document.getElementById('approvalInfo').textContent =
+  'Account Status: ' + profile.status;
+
+if (profile.account_type === 'admin') {
+  document.getElementById('adminPanel').classList.remove('hidden');
+  window.loadUsers();
+} else {
+  document.getElementById('adminPanel').classList.add('hidden');
 }
+}window.loadUsers = async () => {
+  const usersList = document.getElementById('usersList');
+  usersList.textContent = 'Users loading...';
 
+  const { data: users, error } = await supabase
+    .from('profiles')
+    .select('id, full_name, phone, account_type, status, package_amount, created_at')
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    usersList.textContent = 'Error: ' + error.message;
+    return;
+  }
+
+  usersList.replaceChildren();
+
+  if (!users || users.length === 0) {
+    usersList.textContent = 'No users found.';
+    return;
+  }
+
+  users.forEach(user => {
+    const card = document.createElement('div');
+    card.style.border = '1px solid #ccc';
+    card.style.padding = '10px';
+    card.style.margin = '10px 0';
+
+    const details = document.createElement('p');
+    details.textContent =
+      'Name: ' + (user.full_name || 'N/A') +
+      ' | Mobile: ' + (user.phone || 'N/A') +
+      ' | Type: ' + user.account_type +
+      ' | Status: ' + user.status +
+      ' | Package: ₹' + user.package_amount;
+
+    card.appendChild(details);
+    usersList.appendChild(card);
+  });
+};
 window.logout = async () => {
  await supabase.auth.signOut();
  document.getElementById('dashboard').classList.add('hidden');
