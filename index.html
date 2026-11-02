@@ -606,72 +606,49 @@ document.getElementById('loginForm')
 
 async function loadDashboard(user) {
 
-  const { data: profile, error } =
-    await supabase
-      .from('profiles')
-      .select(
-        'full_name, account_type, status, package_amount'
-      )
-      .eq('id', user.id)
-      .maybeSingle();
-
+  const { data: profile, error } = await supabase
+    .from('profiles')
+    .select('full_name, account_type, status, package_amount')
+    .eq('id', user.id)
+    .maybeSingle();
 
   if (error || !profile) {
-
-    showMessage(
-      error ? error.message : 'Profile not found.'
-    );
-
+    showMessage(error ? error.message : 'Profile not found.');
     return;
-
   }
-
 
   hideAllPages();
 
   document.getElementById('dashboard')
     .classList.remove('hidden');
 
-
   document.getElementById('userInfo').textContent =
     'Welcome, ' + (profile.full_name || user.email);
-
 
   document.getElementById('userRole').textContent =
     'Account Type: ' + profile.account_type;
 
-
   document.getElementById('approvalInfo').textContent =
     'Account Status: ' + profile.status;
 
+  const adminPanel = document.getElementById('adminPanel');
+  const aadhaarServices = document.getElementById('aadhaarServices');
 
- if (profile.account_type === 'admin') {
+  if (profile.account_type === 'admin') {
 
-    document.getElementById('adminPanel')
-      .classList.remove('hidden');
-
-    // Admin Aadhaar Services इस्तेमाल नहीं कर सकेगा
-    document.getElementById('aadhaarServices')
-      .classList.add('hidden');
+    adminPanel.classList.remove('hidden');
+    aadhaarServices.classList.add('hidden');
 
     window.loadUsers();
 
   } else {
 
-    // Retailer और Distributor को Services दिखेंगी
-    document.getElementById('aadhaarServices')
-      .classList.remove('hidden');
-
-  }
-
-    document.getElementById('adminPanel')
-      .classList.add('hidden');
+    adminPanel.classList.add('hidden');
+    aadhaarServices.classList.remove('hidden');
 
   }
 
 }
-
-
 // UPDATE USER STATUS
 
 window.updateUserStatus = async (userId, newStatus) => {
