@@ -645,14 +645,24 @@ async function loadDashboard(user) {
     'Account Status: ' + profile.status;
 
 
-  if (profile.account_type === 'admin') {
+ if (profile.account_type === 'admin') {
 
     document.getElementById('adminPanel')
       .classList.remove('hidden');
 
+    // Admin Aadhaar Services इस्तेमाल नहीं कर सकेगा
+    document.getElementById('aadhaarServices')
+      .classList.add('hidden');
+
     window.loadUsers();
 
   } else {
+
+    // Retailer और Distributor को Services दिखेंगी
+    document.getElementById('aadhaarServices')
+      .classList.remove('hidden');
+
+  }
 
     document.getElementById('adminPanel')
       .classList.add('hidden');
