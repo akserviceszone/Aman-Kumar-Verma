@@ -567,9 +567,11 @@ $('aadhaarServices').classList.add('hidden');
 await loadUsers('retailer');
 await loadUsers('distributor');
 }else{
-$('adminPanel').classList.add('hidden');
-$('aadhaarServices').classList.remove('hidden');
-$('aadhaarServiceList').classList.add('hidden');
+  $('adminPanel').classList.add('hidden');
+  $('aadhaarServices').classList.remove('hidden');
+  $('aadhaarServiceList').classList.add('hidden');
+
+  await checkDisclaimer(profile);
 }
 
 $('dashboard').scrollIntoView({behavior:'smooth'});
@@ -629,6 +631,87 @@ box.append(name,phone,status,amount,action);
 list.appendChild(box);
 });
 };
+
+  
+// LEGAL DISCLAIMER CHECK
+window.checkDisclaimer = async (profile) => {
+  if (!['retailer', 'distributor'].includes(profile.account_type)) return;
+
+  const version = '2026-11-03-v1';
+
+  const { data, error } = await supabase
+    .from('profiles')
+    .select('disclaimer_accepted_at, disclaimer_version')
+    .eq('id', (await supabase.auth.getUser()).data.user.id)
+    .maybeSingle();
+
+  if (error) {
+    message('Disclaimer check error: ' + error.message);
+    return;
+  }
+
+  if (data?.disclaimer_accepted_at && data?.disclaimer_version === version) {
+    return;
+  }
+
+  const overlay = document.createElement('div');
+  overlay.id = 'legalDisclaimerPopup';
+
+  Object.assign(overlay.style, {
+    position: 'fixed',
+    inset: '0',
+    background: 'rgba(0,0,0,0.75)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: '99999',
+    padding: '20px'
+  });
+
+  const box = document.createElement('div');
+  Object.assign(box.style, {
+    background: '#fff',
+    color: '#222',
+    padding: '25px',
+    borderRadius: '12px',
+    maxWidth: '450px',
+    width: '100%',
+    textAlign: 'center'
+  });
+
+  const heading = document.createElement('h2');
+  heading.textContent = 'Legal Disclaimer';
+
+  const paragraph = document.createElement('p');
+  paragraph.textContent =
+    'A.K SERVICES की सभी सेवाओं का उपयोग केवल वैध और अधिकृत कार्यों के लिए करें। किसी भी गैरकानूनी गतिविधि, धोखाधड़ी, गलत दस्तावेज़ या अनधिकृत कार्य के लिए अकाउंट धारक स्वयं जिम्मेदार होगा। नियमों का उल्लंघन करने पर A.K SERVICES अकाउंट Suspend कर सकता है।';
+
+  const agreeButton = document.createElement('button');
+  agreeButton.type = 'button';
+  agreeButton.textContent = 'Agree & Continue';
+
+  agreeButton.onclick = async () => {
+    agreeButton.disabled = true;
+    agreeButton.textContent = 'Saving...';
+
+    const { error: saveError } = await supabase.rpc('accept_disclaimer');
+
+    if (saveError) {
+      message('Consent save error: ' + saveError.message);
+      agreeButton.disabled = false;
+      agreeButton.textContent = 'Agree & Continue';
+      return;
+    }
+
+    overlay.remove();
+    message('Disclaimer accepted. Welcome to A.K SERVICES!');
+  };
+
+  box.append(heading, paragraph, agreeButton);
+  overlay.appendChild(box);
+  document.body.appendChild(overlay);
+};
+
 
 // UPDATE STATUS
 window.updateUserStatus=async(userId,newStatus,type)=>{
