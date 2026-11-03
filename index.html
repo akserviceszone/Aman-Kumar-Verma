@@ -737,6 +737,8 @@ return;
 
 hideAccountPages();
 $('dashboard').classList.remove('hidden');
+applyFestivalTheme();
+showFestivalBanner();
 
 $('userInfo').textContent='Welcome, '+(profile.full_name||user.email);
 $('userRole').textContent='Account Type: '+profile.account_type;
@@ -899,6 +901,10 @@ window.checkDisclaimer = async (profile) => {
 
   
 // AUTOMATIC FESTIVAL THEME
+  window.showFestivalBanner = () => {
+  const banner = document.getElementById('festivalBanner');
+  if (banner) banner.classList.remove('hidden');
+};
 window.applyFestivalTheme = () => {
   const date = new Date(
     new Date().toLocaleString('en-US', { timeZone: 'Asia/Kolkata' })
