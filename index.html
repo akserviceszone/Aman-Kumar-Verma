@@ -167,6 +167,65 @@ hr{border:0;border-top:1px solid #e2e8f0;margin:25px 0}
 .info-strip{grid-template-columns:1fr}
 .card{padding:19px}
 }
+
+/* FESTIVAL DASHBOARD THEMES */
+
+body.festival-diwali .dashboard-head {
+  background: linear-gradient(120deg,#7b3100,#e88a00,#ffc94a);
+  border: 2px solid #ffd76a;
+}
+
+body.festival-chhath .dashboard-head {
+  background: linear-gradient(120deg,#8b3b0b,#e97919,#ffc45c);
+  border: 2px solid #ffd18a;
+}
+
+body.festival-childrens .dashboard-head {
+  background: linear-gradient(120deg,#673ab7,#e91e63,#ff9800);
+}
+
+body.festival-christmas .dashboard-head {
+  background: linear-gradient(120deg,#075b37,#b51f2b,#087b50);
+}
+
+body.festival-newyear .dashboard-head {
+  background: linear-gradient(120deg,#17134f,#5134a5,#d34c9b);
+}
+
+body.festival-republic .dashboard-head,
+body.festival-independence .dashboard-head {
+  background: linear-gradient(120deg,#e87518,#ffffff,#16834c);
+  color: #102b55;
+}
+
+body.festival-holi .dashboard-head {
+  background: linear-gradient(120deg,#e91e63,#7b2cbf,#ff9800);
+}
+
+body.festival-eid .dashboard-head {
+  background: linear-gradient(120deg,#075b46,#0c9b78,#d6a83c);
+}
+
+/* WHATSAPP SUPPORT BUTTON */
+
+.whatsapp-support {
+  position: fixed;
+  right: 18px;
+  bottom: 20px;
+  z-index: 9990;
+  width: auto;
+  padding: 13px 18px;
+  border-radius: 40px;
+  background: #25D366;
+  color: white;
+  box-shadow: 0 5px 18px #0003;
+  font-weight: bold;
+}
+
+.whatsapp-support:hover {
+  background: #128C7E;
+}
+
 </style>
 </head>
 
@@ -562,6 +621,7 @@ $('userRole').textContent='Account Type: '+profile.account_type;
 $('approvalInfo').textContent='Account Status: '+profile.status;
 
 if(profile.account_type==='admin'){
+document.getElementById('whatsappSupportBtn')?.remove();
 $('adminPanel').classList.remove('hidden');
 $('aadhaarServices').classList.add('hidden');
 await loadUsers('retailer');
@@ -572,6 +632,8 @@ await loadUsers('distributor');
   $('aadhaarServiceList').classList.add('hidden');
 
   await checkDisclaimer(profile);
+  applyFestivalTheme();
+addWhatsAppSupport();
 }
 
 $('dashboard').scrollIntoView({behavior:'smooth'});
@@ -712,6 +774,74 @@ window.checkDisclaimer = async (profile) => {
   document.body.appendChild(overlay);
 };
 
+  
+// AUTOMATIC FESTIVAL THEME
+window.applyFestivalTheme = () => {
+  const date = new Date(
+    new Date().toLocaleString('en-US', { timeZone: 'Asia/Kolkata' })
+  );
+
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+
+  const themes = [
+    'festival-diwali',
+    'festival-chhath',
+    'festival-childrens',
+    'festival-christmas',
+    'festival-newyear',
+    'festival-republic',
+    'festival-independence',
+    'festival-holi',
+    'festival-eid'
+  ];
+
+  document.body.classList.remove(...themes);
+
+  let theme = '';
+
+  // 2026 festival dates
+  if (month === 11 && day === 8) {
+    theme = 'festival-diwali';
+  } else if (month === 11 && day >= 13 && day <= 16) {
+    theme = 'festival-chhath';
+  } else if (month === 11 && day === 14) {
+    theme = 'festival-childrens';
+  } else if (month === 12 && day >= 24 && day <= 26) {
+    theme = 'festival-christmas';
+  } else if ((month === 12 && day === 31) || (month === 1 && day === 1)) {
+    theme = 'festival-newyear';
+  } else if (month === 1 && day === 26) {
+    theme = 'festival-republic';
+  } else if (month === 8 && day === 15) {
+    theme = 'festival-independence';
+  }
+
+  if (theme) {
+    document.body.classList.add(theme);
+  }
+};
+
+// WHATSAPP SUPPORT BUTTON
+window.addWhatsAppSupport = () => {
+  if (document.getElementById('whatsappSupportBtn')) return;
+
+  const button = document.createElement('button');
+  button.id = 'whatsappSupportBtn';
+  button.className = 'whatsapp-support';
+  button.type = 'button';
+  button.textContent = '🟢 WhatsApp Support';
+
+  button.onclick = () => {
+    window.open(
+      'https://wa.me/919519190269?text=' +
+      encodeURIComponent('Namaste A.K SERVICES, mujhe support chahiye.'),
+      '_blank'
+    );
+  };
+
+  document.body.appendChild(button);
+};
 
 // UPDATE STATUS
 window.updateUserStatus=async(userId,newStatus,type)=>{
