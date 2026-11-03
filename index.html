@@ -267,6 +267,80 @@ body.festival-eid #dashboard .card {
   border: 1px solid #d6a84c88;
   box-shadow: 0 5px 18px #00000012;
 }
+/* FESTIVAL SPECIAL BANNER */
+.festival-banner {
+  display: block;
+  text-align: center;
+  padding: 30px 15px;
+  margin: 15px 0 22px;
+  border-radius: 22px;
+  color: white;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 8px 25px #0003;
+  animation: festivalGlow 3s infinite alternate;
+}
+
+.festival-banner.hidden {
+  display: none;
+}
+
+.festival-banner h1 {
+  font-size: 30px;
+  margin: 12px 0;
+  font-weight: 900;
+}
+
+.festival-banner p {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.festival-decoration {
+  font-size: 38px;
+  margin: 12px;
+  letter-spacing: 8px;
+}
+
+@keyframes festivalGlow {
+  from { box-shadow: 0 5px 15px #0002; }
+  to { box-shadow: 0 8px 28px #ffd16699; }
+}
+
+/* Festival colours */
+body.festival-diwali .festival-banner {
+  background: linear-gradient(135deg,#5b1600,#e87500,#ffc928);
+}
+
+body.festival-chhath .festival-banner {
+  background: linear-gradient(135deg,#702500,#e87813,#ffca63);
+}
+
+body.festival-childrens .festival-banner {
+  background: linear-gradient(135deg,#673ab7,#e91e63,#ff9800);
+}
+
+body.festival-christmas .festival-banner {
+  background: linear-gradient(135deg,#075b37,#b51f2b,#087b50);
+}
+
+body.festival-newyear .festival-banner {
+  background: linear-gradient(135deg,#17134f,#5134a5,#d34c9b);
+}
+
+body.festival-republic .festival-banner,
+body.festival-independence .festival-banner {
+  background: linear-gradient(135deg,#e87518,#ffffff,#16834c);
+  color: #17345c;
+}
+
+body.festival-holi .festival-banner {
+  background: linear-gradient(135deg,#e91e63,#7b2cbf,#ff9800);
+}
+
+body.festival-eid .festival-banner {
+  background: linear-gradient(135deg,#075b46,#0c9b78,#d6a83c);
+}
 </style>
 </head>
 
