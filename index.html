@@ -900,18 +900,19 @@ window.checkDisclaimer = async (profile) => {
 };
 
   
-// AUTOMATIC FESTIVAL THEME
-  window.showFestivalBanner = () => {
-  const banner = document.getElementById('festivalBanner');
-  if (banner) banner.classList.remove('hidden');
-};
+// AUTOMATIC FESTIVAL THEME AND GREETINGS
 window.applyFestivalTheme = () => {
-  const date = new Date(
-    new Date().toLocaleString('en-US', { timeZone: 'Asia/Kolkata' })
+  const now = new Date(
+    new Date().toLocaleString('en-US', {
+      timeZone: 'Asia/Kolkata'
+    })
   );
 
-  const month = date.getMonth() + 1;
-  const day = date.getDate();
+  const year = now.getFullYear();
+  const month = now.getMonth() + 1;
+  const day = now.getDate();
+
+  const today = new Date(year, month - 1, day);
 
   const themes = [
     'festival-diwali',
@@ -927,8 +928,100 @@ window.applyFestivalTheme = () => {
 
   document.body.classList.remove(...themes);
 
-  let theme = '';
+  const festivals = [
+    {
+      name: 'Diwali',
+      start: '2026-11-05',
+      end: '2026-11-08',
+      theme: 'festival-diwali',
+      emoji: '🪔 ✨ 🪔',
+      title: '🪔 Happy Diwali 🪔',
+      message: 'A.K SERVICES की ओर से दीपावली की हार्दिक शुभकामनाएँ!'
+    },
+    {
+      name: 'Chhath',
+      start: '2026-11-10',
+      end: '2026-11-16',
+      theme: 'festival-chhath',
+      emoji: '☀️ 🙏 🌅',
+      title: '☀️ शुभ छठ पूजा ☀️',
+      message: 'छठी मैया आप सभी के जीवन में सुख और समृद्धि लाएँ!'
+    },
+    {
+      name: 'Children',
+      start: '2026-11-14',
+      end: '2026-11-14',
+      theme: 'festival-childrens',
+      emoji: '🎈 🧸 🎉',
+      title: '🎈 Happy Children’s Day 🎈',
+      message: 'बच्चे देश का भविष्य हैं। बाल दिवस की शुभकामनाएँ!'
+    },
+    {
+      name: 'Christmas',
+      start: '2026-12-22',
+      end: '2026-12-25',
+      theme: 'festival-christmas',
+      emoji: '🎄 🎅 🎁',
+      title: '🎄 Merry Christmas 🎄',
+      message: 'A.K SERVICES की ओर से क्रिसमस की शुभकामनाएँ!'
+    },
+    {
+      name: 'New Year',
+      start: '2026-12-29',
+      end: '2027-01-01',
+      theme: 'festival-newyear',
+      emoji: '🎉 🥳 🎆',
+      title: '🎉 Happy New Year 2027 🎉',
+      message: 'नया साल आपके जीवन में खुशियाँ और सफलता लाए!'
+    },
+    {
+      name: 'Republic Day',
+      start: '2027-01-23',
+      end: '2027-01-26',
+      theme: 'festival-republic',
+      emoji: '🇮🇳 🧡 🤍 💚',
+      title: '🇮🇳 Happy Republic Day 🇮🇳',
+      message: 'गणतंत्र दिवस की हार्दिक शुभकामनाएँ!'
+    },
+    {
+      name: 'Independence Day',
+      start: '2027-08-12',
+      end: '2027-08-15',
+      theme: 'festival-independence',
+      emoji: '🇮🇳 🧡 🤍 💚',
+      title: '🇮🇳 Happy Independence Day 🇮🇳',
+      message: 'स्वतंत्रता दिवस की हार्दिक शुभकामनाएँ!'
+    }
+  ];
 
+  const activeFestival = festivals.find(festival => {
+    const start = new Date(festival.start + 'T00:00:00');
+    const end = new Date(festival.end + 'T23:59:59');
+    return today >= start && today <= end;
+  });
+
+  const banner = document.getElementById('festivalBanner');
+
+  if (!activeFestival) {
+    if (banner) banner.classList.add('hidden');
+    return;
+  }
+
+  document.body.classList.add(activeFestival.theme);
+
+  if (banner) {
+    banner.classList.remove('hidden');
+
+    document.getElementById('festivalEmoji').textContent =
+      activeFestival.emoji;
+
+    document.getElementById('festivalTitle').textContent =
+      activeFestival.title;
+
+    document.getElementById('festivalMessage').textContent =
+      activeFestival.message;
+  }
+};
   // 2026 festival dates
   if (month === 11 && day === 8) {
     theme = 'festival-diwali';
