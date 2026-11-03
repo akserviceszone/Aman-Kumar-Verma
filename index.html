@@ -275,21 +275,64 @@ hr{border:0;border-top:1px solid #e2e8f0;margin:25px 0}
 
 <!-- REGISTRATION -->
 <div id="registerBox" class="card hidden">
-<h2>Create New Account</h2>
-<form id="registerForm">
-<label>Account Type</label>
-<select id="regAccountType" required>
-<option value="">Select Account Type</option>
-<option value="retailer">Retailer</option>
-<option value="distributor">Distributor</option>
-</select>
-<input type="text" id="fullName" placeholder="Full Name" required>
-<input type="tel" id="phone" placeholder="10 Digit Mobile Number" pattern="[0-9]{10}" maxlength="10" required>
-<input type="email" id="regEmail" placeholder="Email Address" required>
-<input type="password" id="regPassword" placeholder="Password (Minimum 6 Characters)" minlength="6" required>
-<button type="submit">CREATE ACCOUNT</button>
-</form>
-<button class="back-btn" onclick="goHome()">BACK TO HOME</button>
+  <h2>Create New Account</h2>
+
+  <form id="registerForm">
+
+    <h3>Step 1: Account Details</h3>
+
+    <label>Account Type</label>
+    <select id="regAccountType" required>
+      <option value="">Select Account Type</option>
+      <option value="retailer">Retailer - ₹149</option>
+      <option value="distributor">Distributor - ₹299</option>
+    </select>
+
+    <input type="text" id="fullName"
+      placeholder="Full Name" required>
+
+    <input type="tel" id="phone"
+      placeholder="10 Digit Mobile Number"
+      pattern="[0-9]{10}" maxlength="10" required>
+
+    <input type="email" id="regEmail"
+      placeholder="Email Address" required>
+
+    <h3>Step 2: Business Details</h3>
+
+    <input type="text" id="businessName"
+      placeholder="Business / Shop Name" required>
+
+    <textarea id="businessAddress"
+      placeholder="Full Business Address" required></textarea>
+
+    <input type="text" id="district"
+      placeholder="District" required>
+
+    <input type="text" id="state"
+      placeholder="State" required>
+
+    <input type="text" id="pincode"
+      placeholder="6 Digit PIN Code"
+      pattern="[0-9]{6}" maxlength="6" required>
+
+    <h3>Step 3: Login Details</h3>
+
+    <input type="password" id="regPassword"
+      placeholder="Password (Minimum 8 Characters)"
+      minlength="8" required>
+
+    <input type="password" id="confirmPassword"
+      placeholder="Confirm Password"
+      minlength="8" required>
+
+    <button type="submit">CREATE ACCOUNT</button>
+
+  </form>
+
+  <button class="back-btn" onclick="goHome()">
+    BACK TO HOME
+  </button>
 </div>
 
 <!-- DASHBOARD -->
@@ -393,32 +436,72 @@ $('aadhaarServiceList').classList.toggle('hidden');
 function message(msg){alert(msg);}
 
 // REGISTRATION
-$('registerForm').addEventListener('submit',async e=>{
-e.preventDefault();
+$('registerForm').addEventListener('submit', async e => {
+  e.preventDefault();
 
-const full_name=$('fullName').value.trim();
-const phone=$('phone').value.trim();
-const email=$('regEmail').value.trim();
-const password=$('regPassword').value;
-const account_type=$('regAccountType').value;
+  const full_name = $('fullName').value.trim();
+  const phone = $('phone').value.trim();
+  const email = $('regEmail').value.trim().toLowerCase();
+  const password = $('regPassword').value;
+  const confirmPassword = $('confirmPassword').value;
+  const account_type = $('regAccountType').value;
 
-if(!['retailer','distributor'].includes(account_type)){
-return message('Please select a valid account type.');
-}
-if(!/^[0-9]{10}$/.test(phone)){
-return message('Enter a valid 10 digit mobile number.');
-}
+  const business_name = $('businessName').value.trim();
+  const business_address = $('businessAddress').value.trim();
+  const district = $('district').value.trim();
+  const state = $('state').value.trim();
+  const pincode = $('pincode').value.trim();
 
-const {error}=await supabase.auth.signUp({
-email,password,
-options:{data:{full_name,phone,account_type}}
-});
+  if (!['retailer', 'distributor'].includes(account_type)) {
+    return message('Please select a valid account type.');
+  }
 
-if(error)return message(error.message);
+  if (!full_name || !business_name || !business_address ||
+      !district || !state) {
+    return message('Please fill all required details.');
+  }
 
-message('Registration submitted. Verify your email if requested. Account access depends on its profile status.');
-e.target.reset();
-window.goHome();
+  if (!/^[0-9]{10}$/.test(phone)) {
+    return message('Enter a valid 10 digit mobile number.');
+  }
+
+  if (!/^[0-9]{6}$/.test(pincode)) {
+    return message('Enter a valid 6 digit PIN Code.');
+  }
+
+  if (password.length < 8) {
+    return message('Password must contain at least 8 characters.');
+  }
+
+  if (password !== confirmPassword) {
+    return message('Password and Confirm Password do not match.');
+  }
+
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: {
+      data: {
+        full_name,
+        phone,
+        account_type,
+        business_name,
+        business_address,
+        district,
+        state,
+        pincode
+      }
+    }
+  });
+
+  if (error) {
+    return message(error.message);
+  }
+
+  message('Account created. Please check your email and click the confirmation link before login, if email confirmation is enabled.');
+
+  e.target.reset();
+  window.goHome();
 });
 
 // LOGIN
