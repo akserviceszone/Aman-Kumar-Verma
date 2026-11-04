@@ -486,13 +486,12 @@ footer {
 }
 
 /* Login screen */
-#loginBox {
-  display: block !important;
+#loginBox:not(.hidden) {
+  display: block;
   max-width: 430px;
   margin: 70px auto;
   padding: 30px;
 }
-
 #loginBox h2 {
   text-align: center;
   color: var(--navy);
