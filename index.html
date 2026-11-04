@@ -562,80 +562,42 @@ footer {
 
 <div class="container">
 
-<div class="section-title">
-<h2>Choose Your Account</h2>
-<p>Please select your account type to continue</p>
+<div class="section-title" id="accountTitle">
+  <h2>Choose Your Account</h2>
+  <p>Please select your account type to continue</p>
 </div>
 
-<div class="login-grid">
-<div class="login-card">
-<div class="login-icon admin-icon">🛡️</div>
-<h3>Admin Portal</h3>
-<p>Manage accounts and monitor users.</p>
-<button class="admin-btn" onclick="chooseLoginType('admin')">ADMIN LOGIN</button>
+<div class="login-grid" id="accountOptions">
+
+  <div class="login-card">
+    <div class="login-icon admin-icon">🛡️</div>
+    <h3>Admin Portal</h3>
+    <p>Manage accounts and monitor users.</p>
+    <button onclick="chooseLoginType('admin')">Admin Login</button>
+  </div>
+
+  <div class="login-card">
+    <div class="login-icon retailer-icon">🏪</div>
+    <h3>Retailer Portal</h3>
+    <p>Access your retailer account and services.</p>
+    <button onclick="chooseLoginType('retailer')">Retailer Login</button>
+  </div>
+
+  <div class="login-card">
+    <div class="login-icon distributor-icon">🏢</div>
+    <h3>Distributor Portal</h3>
+    <p>Access your distributor account and services.</p>
+    <button onclick="chooseLoginType('distributor')">Distributor Login</button>
+  </div>
+
 </div>
 
-<div class="login-card">
-<div class="login-icon retailer-icon">🏪</div>
-<h3>Retailer Portal</h3>
-<p>Access your retailer account and services.</p>
-<button class="retailer-btn" onclick="chooseLoginType('retailer')">RETAILER LOGIN</button>
+<div id="createAccountOption" style="text-align:center;margin:25px 0">
+  <button class="create-btn" onclick="showRegister()">
+    ＋ CREATE NEW ACCOUNT
+  </button>
 </div>
-
-<div class="login-card">
-<div class="login-icon distributor-icon">🏢</div>
-<h3>Distributor Portal</h3>
-<p>Access your distributor account and services.</p>
-<button class="distributor-btn" onclick="chooseLoginType('distributor')">DISTRIBUTOR LOGIN</button>
-</div>
-</div>
-
-<div style="text-align:center;margin:25px 0">
-<button class="create-btn" onclick="showRegister()">＋ CREATE NEW ACCOUNT</button>
-</div>
-
 <div class="info-strip">
-<div class="info-box"><strong>Digital Services</strong><span>Online Service Support</span></div>
-<div class="info-box"><strong>Retailer Network</strong><span>Account Management</span></div>
-<div class="info-box"><strong>Customer Support</strong><span>Service Assistance</span></div>
-</div>
-
-<section id="services">
-<div class="section-title"><h2>Our Services</h2><p>Digital services available through A.K SERVICES</p></div>
-<div class="service-grid">
-<div class="service"><div class="service-icon">🪪</div><h3>Aadhaar Services</h3><p>Digital Aadhaar assistance</p></div>
-<div class="service"><div class="service-icon">💳</div><h3>Banking Assistance</h3><p>Banking service support</p></div>
-<div class="service"><div class="service-icon">📄</div><h3>PAN Services</h3><p>PAN related assistance</p></div>
-<div class="service"><div class="service-icon">📱</div><h3>Mobile Recharge</h3><p>Mobile and DTH recharge</p></div>
-<div class="service"><div class="service-icon">🚘</div><h3>Vehicle Services</h3><p>Online vehicle assistance</p></div>
-<div class="service"><div class="service-icon">🗳️</div><h3>Voter Services</h3><p>Voter related assistance</p></div>
-</div>
-</section>
-
-<section id="about" class="card">
-<div class="section-title"><h2>About A.K SERVICES</h2></div>
-<p style="text-align:center">A.K SERVICES is a digital service center based in Govindpur, Dhanbad, Jharkhand. हमारा उद्देश्य डिजिटल सेवाओं को सरल और सुविधाजनक बनाना है।</p>
-</section>
-
-<section id="contact" class="card">
-<div class="section-title"><h2>Contact Us</h2></div>
-<p style="text-align:center">📍 Govindpur Upper Bazar, Govindpur, Dhanbad, Jharkhand – 828109</p>
-<p style="text-align:center">📞 +91 95191 90269</p>
-</section>
-
-<!-- LOGIN -->
-<div id="loginBox" class="card hidden">
-<h2 id="loginHeading">🔐 ADMIN LOGIN</h2>
-<form id="loginForm">
-<input type="email" id="email" placeholder="Email Address" required>
-<input type="password" id="password" placeholder="Password" required>
-<button type="submit">LOGIN TO ACCOUNT</button>
-</form>
-<div class="link" onclick="forgotAdminPassword()">
-  Forgot Password?
-</div>
-<button class="back-btn" onclick="goHome()">BACK TO HOME</button>
-</div>
 
 <!-- REGISTRATION -->
 <div id="registerBox" class="card hidden">
