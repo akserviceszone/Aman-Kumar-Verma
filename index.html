@@ -808,11 +808,30 @@ $('registerBox').classList.add('hidden');
 $('dashboard').classList.add('hidden');
 }
 
-window.goHome=()=>{
-hideAccountPages();
-selectedLoginType='';
-$('loginForm').reset();
-window.scrollTo({top:0,behavior:'smooth'});
+window.goHome = () => {
+  hideAccountPages();
+
+  // Login selection panel वापस दिखाएं
+  document.querySelector(
+    '#home > .container > .section-title'
+  ).classList.remove('hidden');
+
+  document.querySelector(
+    '#home > .container > .login-grid'
+  ).classList.remove('hidden');
+
+  document.querySelector(
+    '#home > .container > div[style]'
+  ).classList.remove('hidden');
+
+  selectedLoginType = '';
+
+  $('loginForm').reset();
+
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth'
+  });
 };
 
 window.chooseLoginType=type=>{
@@ -826,6 +845,18 @@ $('loginBox').scrollIntoView({behavior:'smooth'});
 window.showRegister=()=>{
 hideAccountPages();
 $('registerBox').classList.remove('hidden');
+// Login Selection Panel छिपाएं
+document.querySelector(
+  '#home > .container > .section-title'
+).classList.add('hidden');
+
+document.querySelector(
+  '#home > .container > .login-grid'
+).classList.add('hidden');
+
+document.querySelector(
+  '#home > .container > div[style]'
+).classList.add('hidden');
 $('registerBox').scrollIntoView({behavior:'smooth'});
 };
 
