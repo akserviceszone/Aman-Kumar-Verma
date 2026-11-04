@@ -1235,5 +1235,43 @@ if(sessionData.session){
 await loadDashboard(sessionData.session.user);
 }
 </script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+  const checkbox = document.getElementById("acceptTerms");
+  const acceptBtn = document.getElementById("acceptTermsBtn");
+  const welcomeBox = document.getElementById("welcomeTerms");
+
+  if (!checkbox || !acceptBtn || !welcomeBox) {
+    console.error("Welcome Terms elements not found");
+    return;
+  }
+
+  // पहले से स्वीकार किया है या नहीं
+  if (localStorage.getItem("ak_terms_v1") === "accepted") {
+    welcomeBox.style.display = "none";
+  }
+
+  // Checkbox पर टिक करने पर Button चालू होगा
+  checkbox.addEventListener("change", function () {
+    acceptBtn.disabled = !checkbox.checked;
+  });
+
+  // Accept Button
+  acceptBtn.addEventListener("click", function () {
+
+    if (!checkbox.checked) {
+      alert("Please Accept Terms & Conditions");
+      return;
+    }
+
+    localStorage.setItem("ak_terms_v1", "accepted");
+
+    welcomeBox.style.display = "none";
+
+  });
+
+});
+</script>
 </body>
 </html>
