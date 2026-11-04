@@ -489,12 +489,28 @@ footer {
 }
 
 /* Login and registration stay hidden initially */
-#loginBox,
-#registerBox,
-#dashboard {
-  display: none;
+/* LOGIN BOX */
+#loginBox:not(.hidden) {
+  display: block;
+  max-width: 430px;
+  margin: 40px auto;
+  padding: 30px;
 }
 
+/* REGISTRATION BOX */
+#registerBox:not(.hidden) {
+  display: block;
+}
+
+/* DASHBOARD */
+#dashboard:not(.hidden) {
+  display: block;
+}
+
+/* HIDDEN ELEMENTS */
+.hidden {
+  display: none !important;
+}
 /* Show login selection screen */
 #home > .container > .section-title {
   display: block;
