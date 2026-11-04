@@ -802,7 +802,17 @@ let selectedLoginType='admin';
 
 const $=id=>document.getElementById(id);
 
-function hideAccountPages(){
+function hideLoginSelection() {
+  $('accountTitle').classList.add('hidden');
+  $('accountOptions').classList.add('hidden');
+  $('createAccountOption').classList.add('hidden');
+}
+
+function showLoginSelection() {
+  $('accountTitle').classList.remove('hidden');
+  $('accountOptions').classList.remove('hidden');
+  $('createAccountOption').classList.remove('hidden');
+}
 $('loginBox').classList.add('hidden');
 $('registerBox').classList.add('hidden');
 $('dashboard').classList.add('hidden');
@@ -987,6 +997,7 @@ return;
 
 hideAccountPages();
 $('dashboard').classList.remove('hidden');
+hideLoginSelection();
 applyFestivalTheme();
 $('userInfo').textContent='Welcome, '+(profile.full_name||user.email);
 $('userRole').textContent='Account Type: '+profile.account_type;
@@ -1409,12 +1420,12 @@ await loadUsers(type);
 };
 
 // LOGOUT
-window.logout=async()=>{
-await supabase.auth.signOut();
-window.goHome();
-message('You have been logged out.');
-};
-
+window.logout = async () => {
+  await supabase.auth.signOut();
+  window.goHome();
+  message('You have been logged out.');
+}; 
+  
 // EXISTING SESSION
 const {data:sessionData}=await supabase.auth.getSession();
 if(sessionData.session){
