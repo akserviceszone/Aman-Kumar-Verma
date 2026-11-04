@@ -460,52 +460,21 @@ body.festival-holi .festival-banner {
 body.festival-eid .festival-banner {
   background: linear-gradient(135deg,#075b46,#0c9b78,#d6a83c);
 }
+/* ADMIN DASHBOARD TWO OPTIONS */
+#adminOptions .login-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+@media(max-width:700px) {
+  #adminOptions .login-grid {
+    grid-template-columns: 1fr;
+  }
+}
 </style>
 </head>
 
 <body>
 <!-- A.K SERVICES WELCOME & TERMS -->
-<div id="welcomeTerms" class="welcome-overlay">
-  <div class="welcome-box">
-
-    <div class="welcome-top">
-      <div class="welcome-icon">🔷</div>
-      <h1>WELCOME TO</h1>
-      <h2>A.K SERVICES WORLD</h2>
-      <p>आपकी डिजिटल सेवाओं का भरोसेमंद परिवार</p>
-    </div>
-
-    <div class="welcome-content">
-      <h3>⚠️ IMPORTANT NOTICE</h3>
-      <p>वेबसाइट शुरू करने से पहले निम्नलिखित नियम ध्यान से पढ़ें।</p>
-
-      <div class="rules-list">
-        <p>1. वेबसाइट का उपयोग केवल वैध और अधिकृत कार्यों के लिए करें।</p>
-        <p>2. किसी भी प्रकार की धोखाधड़ी या गलत दस्तावेजों का उपयोग न करें।</p>
-        <p>3. बाजार में उपलब्ध मिलते-जुलते पोर्टल और फर्जी वेबसाइटों से सावधान रहें।</p>
-        <p>4. अपनी Login ID और Password किसी अन्य व्यक्ति के साथ साझा न करें।</p>
-        <p>5. गलत गतिविधि करने पर उसकी जिम्मेदारी संबंधित अकाउंट धारक की होगी।</p>
-        <p>6. नियमों का उल्लंघन होने पर A.K SERVICES अकाउंट Suspend कर सकता है।</p>
-        <p>7. केवल अधिकृत सेवाओं का ही उपयोग करें।</p>
-      </div>
-
-      <div class="terms-check">
-        <label>
-          <input type="checkbox" id="acceptTerms">
-          I Accept Terms & Conditions
-        </label>
-      </div>
-
-      <button type="button" id="acceptTermsBtn" disabled>
-        ACCEPT & CONTINUE
-      </button>
-
-      <p class="terms-footer">
-        Please read all rules carefully before continuing.
-      </p>
-    </div>
-  </div>
-</div>
 
 <header>
 <div class="nav">
@@ -688,19 +657,48 @@ body.festival-eid .festival-banner {
 </div>
 
 <!-- ADMIN ONLY -->
+<!-- ADMIN ONLY -->
 <div id="adminPanel" class="card hidden">
-<h2>Admin Control Center</h2>
-<p>Manage Retailer and Distributor accounts.</p>
 
-<div class="panel-title"><h3>🏪 Retailer Management</h3></div>
-<button onclick="loadUsers('retailer')">REFRESH RETAILERS</button>
-<div id="retailerUsersList">Retailer list loading...</div>
+  <div id="adminOptions">
+    <h2>Admin Control Center</h2>
+    <p>कृपया वह अकाउंट चुनें जिसकी जानकारी देखनी है।</p>
 
-<hr>
+    <div class="login-grid">
+      <div class="login-card">
+        <div class="login-icon retailer-icon">🏪</div>
+        <h3>Retailer List</h3>
+        <p>सभी Retailer अकाउंट और उनकी जानकारी देखें।</p>
+        <button class="retailer-btn" onclick="showAdminUsers('retailer')">
+          VIEW RETAILERS
+        </button>
+      </div>
 
-<div class="panel-title"><h3>🏢 Distributor Management</h3></div>
-<button onclick="loadUsers('distributor')">REFRESH DISTRIBUTORS</button>
-<div id="distributorUsersList">Distributor list loading...</div>
+      <div class="login-card">
+        <div class="login-icon distributor-icon">🏢</div>
+        <h3>Distributor List</h3>
+        <p>सभी Distributor अकाउंट और उनकी जानकारी देखें।</p>
+        <button class="distributor-btn" onclick="showAdminUsers('distributor')">
+          VIEW DISTRIBUTORS
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="adminUsersView" class="hidden">
+    <h2 id="adminUsersHeading">Account List</h2>
+    <button class="back-btn" onclick="backToAdminOptions()">
+      ← BACK TO ADMIN DASHBOARD
+    </button>
+
+    <button id="refreshUsersBtn" onclick="refreshAdminUsers()">
+      REFRESH LIST
+    </button>
+
+    <div id="retailerUsersList" class="hidden"></div>
+    <div id="distributorUsersList" class="hidden"></div>
+  </div>
+
 </div>
 
 <!-- NON ADMIN SERVICES -->
@@ -902,14 +900,22 @@ applyFestivalTheme();
 $('userInfo').textContent='Welcome, '+(profile.full_name||user.email);
 $('userRole').textContent='Account Type: '+profile.account_type;
 $('approvalInfo').textContent='Account Status: '+profile.status;
+if (profile.account_type === 'admin') {
+  document.getElementById('whatsappSupportBtn')?.remove();
 
-if(profile.account_type==='admin'){
-document.getElementById('whatsappSupportBtn')?.remove();
-$('adminPanel').classList.remove('hidden');
-$('aadhaarServices').classList.add('hidden');
-await loadUsers('retailer');
-await loadUsers('distributor');
-}else{
+  $('adminPanel').classList.remove('hidden');
+  $('aadhaarServices').classList.add('hidden');
+
+  // Admin login के बाद पहले केवल दो विकल्प दिखेंगे
+  $('adminOptions').classList.remove('hidden');
+  $('adminUsersView').classList.add('hidden');
+
+  $('retailerUsersList').classList.add('hidden');
+  $('distributorUsersList').classList.add('hidden');
+
+  currentAdminListType = '';
+}
+else{
   $('adminPanel').classList.add('hidden');
   $('aadhaarServices').classList.remove('hidden');
   $('aadhaarServiceList').classList.add('hidden');
@@ -922,7 +928,41 @@ addWhatsAppSupport();
 
 $('dashboard').scrollIntoView({behavior:'smooth'});
 }
+// ADMIN DASHBOARD NAVIGATION
+let currentAdminListType = '';
 
+window.showAdminUsers = async (type) => {
+  if (!['retailer', 'distributor'].includes(type)) return;
+
+  currentAdminListType = type;
+
+  $('adminOptions').classList.add('hidden');
+  $('adminUsersView').classList.remove('hidden');
+
+  $('adminUsersHeading').textContent =
+    type === 'retailer' ? '🏪 Retailer Accounts' : '🏢 Distributor Accounts';
+
+  $('retailerUsersList').classList.toggle('hidden', type !== 'retailer');
+  $('distributorUsersList').classList.toggle('hidden', type !== 'distributor');
+
+  await loadUsers(type);
+};
+
+window.backToAdminOptions = () => {
+  currentAdminListType = '';
+
+  $('adminUsersView').classList.add('hidden');
+  $('adminOptions').classList.remove('hidden');
+
+  $('retailerUsersList').classList.add('hidden');
+  $('distributorUsersList').classList.add('hidden');
+};
+
+window.refreshAdminUsers = async () => {
+  if (currentAdminListType) {
+    await loadUsers(currentAdminListType);
+  }
+};
 // LOAD SEPARATE USER LISTS
 window.loadUsers=async type=>{
 const listId=type==='retailer'?'retailerUsersList':'distributorUsersList';
