@@ -470,13 +470,10 @@ body.festival-eid .festival-banner {
     grid-template-columns: 1fr;
   }
 }
-/* ADMIN LOGIN ONLY - INITIAL WEBSITE SCREEN */
+/* INITIAL LOGIN SELECTION SCREEN */
 
 header,
 .hero,
-#home > .container > .section-title,
-#home > .container > .login-grid,
-#home > .container > div[style],
 .info-strip,
 #services,
 #about,
@@ -485,21 +482,34 @@ footer {
   display: none !important;
 }
 
-/* Login screen */
-#loginBox:not(.hidden) {
-  display: block;
-  max-width: 430px;
-  margin: 70px auto;
-  padding: 30px;
-}
-#loginBox h2 {
-  text-align: center;
-  color: var(--navy);
+/* Show all account types */
+#home > .container > .section-title,
+#home > .container > .login-grid {
+  display: grid;
 }
 
-@media(max-width:600px) {
-  #loginBox {
-    margin: 30px 12px;
+/* Login and registration stay hidden initially */
+#loginBox,
+#registerBox,
+#dashboard {
+  display: none;
+}
+
+/* Show login selection screen */
+#home > .container > .section-title {
+  display: block;
+  margin-top: 50px;
+}
+
+#home > .container > .login-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+
+@media(max-width:700px) {
+  #home > .container > .login-grid {
+    grid-template-columns: 1fr;
   }
 }
 </style>
@@ -598,7 +608,7 @@ footer {
 </section>
 
 <!-- LOGIN -->
-<div id="loginBox" class="card">
+<div id="loginBox" class="card hidden">
 <h2 id="loginHeading">🔐 ADMIN LOGIN</h2>
 <form id="loginForm">
 <input type="email" id="email" placeholder="Email Address" required>
