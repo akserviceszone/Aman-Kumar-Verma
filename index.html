@@ -470,6 +470,39 @@ body.festival-eid .festival-banner {
     grid-template-columns: 1fr;
   }
 }
+/* ADMIN LOGIN ONLY - INITIAL WEBSITE SCREEN */
+
+header,
+.hero,
+#home > .container > .section-title,
+#home > .container > .login-grid,
+#home > .container > div[style],
+.info-strip,
+#services,
+#about,
+#contact,
+footer {
+  display: none !important;
+}
+
+/* Login screen */
+#loginBox {
+  display: block !important;
+  max-width: 430px;
+  margin: 70px auto;
+  padding: 30px;
+}
+
+#loginBox h2 {
+  text-align: center;
+  color: var(--navy);
+}
+
+@media(max-width:600px) {
+  #loginBox {
+    margin: 30px 12px;
+  }
+}
 </style>
 </head>
 
@@ -566,8 +599,8 @@ body.festival-eid .festival-banner {
 </section>
 
 <!-- LOGIN -->
-<div id="loginBox" class="card hidden">
-<h2 id="loginHeading">Account Login</h2>
+<div id="loginBox" class="card">
+<h2 id="loginHeading">🔐 ADMIN LOGIN</h2>
 <form id="loginForm">
 <input type="email" id="email" placeholder="Email Address" required>
 <input type="password" id="password" placeholder="Password" required>
@@ -738,7 +771,7 @@ const SUPABASE_URL='https://wxacdymlbxrrvhxhhzrc.supabase.co';
 const SUPABASE_KEY='sb_publishable_vbWtl2hOd7LIvNDHVSQSTA_CjdIiluV';
 const supabase=createClient(SUPABASE_URL,SUPABASE_KEY);
 
-let selectedLoginType='';
+let selectedLoginType='admin';
 
 const $=id=>document.getElementById(id);
 
