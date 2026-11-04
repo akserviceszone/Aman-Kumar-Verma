@@ -963,62 +963,117 @@ window.refreshAdminUsers = async () => {
     await loadUsers(currentAdminListType);
   }
 };
-// LOAD SEPARATE USER LISTS
-window.loadUsers=async type=>{
-const listId=type==='retailer'?'retailerUsersList':'distributorUsersList';
-const list=$(listId);
-list.replaceChildren();
-list.textContent='Loading '+type+' accounts...';
 
-const {data:users,error}=await supabase
-.from('profiles')
-.select('id,full_name,phone,account_type,status,package_amount,created_at')
-.eq('account_type',type)
-.order('created_at',{ascending:false});
+// LOAD RETAILER AND DISTRIBUTOR FULL DETAILS
+window.loadUsers = async (type) => {
 
-list.replaceChildren();
+  if (!['retailer', 'distributor'].includes(type)) return;
 
-if(error){
-list.textContent='Error: '+error.message;
-return;
-}
+  const listId = type === 'retailer'
+    ? 'retailerUsersList'
+    : 'distributorUsersList';
 
-if(!users||users.length===0){
-list.textContent='No '+type+' accounts found.';
-return;
-}
+  const list = $(listId);
 
-users.forEach((user,index)=>{
-const box=document.createElement('div');
-box.className='user-card';
+  list.replaceChildren();
+  list.textContent = 'Loading account details...';
 
-const name=document.createElement('h3');
-name.textContent=(index+1)+'. '+(user.full_name||'Name not available');
+  const { data: users, error } = await supabase
+    .from('profiles')
+    .select(`
+      id,
+      full_name,
+      phone,
+      account_type,
+      status,
+      package_amount,
+      created_at,
+      business_name,
+      business_address,
+      district,
+      state,
+      pincode
+    `)
+    .eq('account_type', type)
+    .order('created_at', { ascending: false });
 
-const phone=document.createElement('p');
-phone.textContent='Mobile: '+(user.phone||'N/A');
+  list.replaceChildren();
 
-const status=document.createElement('p');
-status.textContent='Status: '+user.status;
-status.className=user.status==='active'?'status-active':'status-suspended';
+  if (error) {
+    list.textContent = 'Error: ' + error.message;
+    return;
+  }
 
-const amount=document.createElement('p');
-amount.textContent='Package: ₹'+(user.package_amount||0);
+  if (!users || users.length === 0) {
+    list.textContent = 'No ' + type + ' accounts found.';
+    return;
+  }
 
-const action=document.createElement('button');
-action.className='small-btn';
-action.textContent=user.status==='active'?'SUSPEND ACCOUNT':'ACTIVATE ACCOUNT';
-action.style.background=user.status==='active'?'#dc2626':'#07866f';
-action.addEventListener('click',()=>{
-updateUserStatus(user.id,user.status==='active'?'suspended':'active',type);
-});
+  users.forEach((user, index) => {
 
-box.append(name,phone,status,amount,action);
-list.appendChild(box);
-});
+    const box = document.createElement('div');
+    box.className = 'user-card';
+
+    const heading = document.createElement('h3');
+    heading.textContent =
+      (index + 1) + '. ' + (user.full_name || 'Name Not Available');
+
+    const details = [
+      ['Account Type', user.account_type],
+      ['Mobile Number', user.phone],
+      ['Business / Shop Name', user.business_name],
+      ['Full Address', user.business_address],
+      ['District', user.district],
+      ['State', user.state],
+      ['PIN Code', user.pincode],
+      ['Package Amount', '₹' + (user.package_amount || 0)],
+      ['Registration Date', user.created_at
+        ? new Date(user.created_at).toLocaleDateString('en-IN')
+        : 'N/A']
+    ];
+
+    box.appendChild(heading);
+
+    details.forEach(([label, value]) => {
+      const p = document.createElement('p');
+      p.textContent = label + ': ' + (value || 'Not Available');
+      box.appendChild(p);
+    });
+
+    const status = document.createElement('p');
+    status.textContent = 'Account Status: ' + user.status;
+    status.className =
+      user.status === 'active'
+        ? 'status-active'
+        : 'status-suspended';
+
+    box.appendChild(status);
+
+    const action = document.createElement('button');
+    action.className = 'small-btn';
+
+    action.textContent =
+      user.status === 'active'
+        ? 'SUSPEND ACCOUNT'
+        : 'ACTIVATE ACCOUNT';
+
+    action.style.background =
+      user.status === 'active' ? '#dc2626' : '#07866f';
+
+    action.onclick = () => {
+      updateUserStatus(
+        user.id,
+        user.status === 'active' ? 'suspended' : 'active',
+        type
+      );
+    };
+
+    box.appendChild(action);
+    list.appendChild(box);
+  });
 };
 
-  
+ 
 // LEGAL DISCLAIMER CHECK
 window.checkDisclaimer = async (profile) => {
   if (!['retailer', 'distributor'].includes(profile.account_type)) return;
