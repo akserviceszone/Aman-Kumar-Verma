@@ -167,6 +167,125 @@ hr{border:0;border-top:1px solid #e2e8f0;margin:25px 0}
 .info-strip{grid-template-columns:1fr}
 .card{padding:19px}
 }
+/* WELCOME TERMS DESIGN */
+.welcome-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background: #07152e;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 15px;
+  overflow-y: auto;
+}
+
+.welcome-box {
+  width: 100%;
+  max-width: 650px;
+  background: #ffffff;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 15px 50px #0008;
+}
+
+.welcome-top {
+  background: linear-gradient(135deg,#071b43,#075c9c,#087c83);
+  color: white;
+  text-align: center;
+  padding: 30px 15px;
+}
+
+.welcome-icon {
+  font-size: 48px;
+}
+
+.welcome-top h1 {
+  font-size: 27px;
+  margin: 8px;
+}
+
+.welcome-top h2 {
+  font-size: 34px;
+  color: #ffd166;
+  margin: 10px 0;
+}
+
+.welcome-top p {
+  font-size: 16px;
+  color: white;
+}
+
+.welcome-content {
+  padding: 22px;
+  color: #172b46;
+}
+
+.welcome-content h3 {
+  color: #c0392b;
+  font-size: 21px;
+}
+
+.rules-list {
+  background: #f0f4fa;
+  border-left: 5px solid #e58a19;
+  padding: 12px;
+  border-radius: 9px;
+}
+
+.rules-list p {
+  font-size: 14px;
+  line-height: 1.6;
+  margin: 10px 0;
+}
+
+.terms-check {
+  margin-top: 20px;
+  padding: 14px;
+  background: #e9f5ff;
+  border-radius: 9px;
+}
+
+.terms-check label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.terms-check input {
+  width: 21px;
+  height: 21px;
+  margin: 0;
+}
+
+#acceptTermsBtn {
+  background: #087c58;
+  font-size: 17px;
+  padding: 16px;
+  margin-top: 15px;
+}
+
+#acceptTermsBtn:disabled {
+  background: #8995a5;
+  cursor: not-allowed;
+}
+
+.terms-footer {
+  text-align: center;
+  font-size: 12px;
+  color: #64748b;
+}
+
+@media(max-width:500px) {
+  .welcome-top h2 {
+    font-size: 26px;
+  }
+  .welcome-content {
+    padding: 15px;
+  }
+}
 
 /* FESTIVAL DASHBOARD THEMES */
 
@@ -345,6 +464,48 @@ body.festival-eid .festival-banner {
 </head>
 
 <body>
+<!-- A.K SERVICES WELCOME & TERMS -->
+<div id="welcomeTerms" class="welcome-overlay">
+  <div class="welcome-box">
+
+    <div class="welcome-top">
+      <div class="welcome-icon">🔷</div>
+      <h1>WELCOME TO</h1>
+      <h2>A.K SERVICES WORLD</h2>
+      <p>आपकी डिजिटल सेवाओं का भरोसेमंद परिवार</p>
+    </div>
+
+    <div class="welcome-content">
+      <h3>⚠️ IMPORTANT NOTICE</h3>
+      <p>वेबसाइट शुरू करने से पहले निम्नलिखित नियम ध्यान से पढ़ें।</p>
+
+      <div class="rules-list">
+        <p>1. वेबसाइट का उपयोग केवल वैध और अधिकृत कार्यों के लिए करें।</p>
+        <p>2. किसी भी प्रकार की धोखाधड़ी या गलत दस्तावेजों का उपयोग न करें।</p>
+        <p>3. बाजार में उपलब्ध मिलते-जुलते पोर्टल और फर्जी वेबसाइटों से सावधान रहें।</p>
+        <p>4. अपनी Login ID और Password किसी अन्य व्यक्ति के साथ साझा न करें।</p>
+        <p>5. गलत गतिविधि करने पर उसकी जिम्मेदारी संबंधित अकाउंट धारक की होगी।</p>
+        <p>6. नियमों का उल्लंघन होने पर A.K SERVICES अकाउंट Suspend कर सकता है।</p>
+        <p>7. केवल अधिकृत सेवाओं का ही उपयोग करें।</p>
+      </div>
+
+      <div class="terms-check">
+        <label>
+          <input type="checkbox" id="acceptTerms">
+          I Accept Terms & Conditions
+        </label>
+      </div>
+
+      <button type="button" id="acceptTermsBtn" disabled>
+        ACCEPT & CONTINUE
+      </button>
+
+      <p class="terms-footer">
+        Please read all rules carefully before continuing.
+      </p>
+    </div>
+  </div>
+</div>
 
 <header>
 <div class="nav">
