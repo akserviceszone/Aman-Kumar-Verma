@@ -1020,28 +1020,7 @@ window.applyFestivalTheme = () => {
       activeFestival.message;
   }
 };
-  // 2026 festival dates
-  if (month === 11 && day === 8) {
-    theme = 'festival-diwali';
-  } else if (month === 11 && day >= 13 && day <= 16) {
-    theme = 'festival-chhath';
-  } else if (month === 11 && day === 14) {
-    theme = 'festival-childrens';
-  } else if (month === 12 && day >= 24 && day <= 26) {
-    theme = 'festival-christmas';
-  } else if ((month === 12 && day === 31) || (month === 1 && day === 1)) {
-    theme = 'festival-newyear';
-  } else if (month === 1 && day === 26) {
-    theme = 'festival-republic';
-  } else if (month === 8 && day === 15) {
-    theme = 'festival-independence';
-  }
-
-  if (theme) {
-    document.body.classList.add(theme);
-  }
-};
-
+ 
 // WHATSAPP SUPPORT BUTTON
 window.addWhatsAppSupport = () => {
   if (document.getElementById('whatsappSupportBtn')) return;
